@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Price Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="img"></div>
+    <div class="container">
+        <h1>Real Estate Price Prediction</h1>
+        <form id="predictForm" class="form">
+            <div class="form-group">
+                <label for="uiSqft">Area (Square Feet)</label>
+                <input type="text" id="uiSqft" name="sqft" placeholder="Enter Area in sqft" required>
+            </div>
+            <div class="form-group">
+                <label for="uiBHK">BHK</label>
+                <div class="switch-field">
+                    <input type="radio" id="radio-bhk-1" name="bhk" value="1" checked />
+                    <label for="radio-bhk-1">1</label>
+                    <input type="radio" id="radio-bhk-2" name="bhk" value="2" />
+                    <label for="radio-bhk-2">2</label>
+                    <input type="radio" id="radio-bhk-3" name="bhk" value="3" />
+                    <label for="radio-bhk-3">3</label>
+                    <input type="radio" id="radio-bhk-4" name="bhk" value="4" />
+                    <label for="radio-bhk-4">4</label>
+                    <input type="radio" id="radio-bhk-5" name="bhk" value="5" />
+                    <label for="radio-bhk-5">5</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="uiBath">Bath</label>
+                <div class="switch-field">
+                    <input type="radio" id="radio-bath-1" name="bath" value="1" checked />
+                    <label for="radio-bath-1">1</label>
+                    <input type="radio" id="radio-bath-2" name="bath" value="2" />
+                    <label for="radio-bath-2">2</label>
+                    <input type="radio" id="radio-bath-3" name="bath" value="3" />
+                    <label for="radio-bath-3">3</label>
+                    <input type="radio" id="radio-bath-4" name="bath" value="4" />
+                    <label for="radio-bath-4">4</label>
+                    <input type="radio" id="radio-bath-5" name="bath" value="5" />
+                    <label for="radio-bath-5">5</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="uiLocations">Location</label>
+                <select id="uiLocations" name="location" required>
+                    <option value="" disabled selected>Choose a Location</option>
+                    <option>Electronic City</option>
+                    <option>Rajaji Nagar</option>
+                    <option>Vasantha Vallabha Nagar</option>
+                    <option>Sahakara Nagar</option>
+                    <option>Yelahanka</option>
+                    <option>Uttarahalli</option>
+                    <option>Hosa Road</option>
+                    <option>Kammasandra</option>
+                    <option>Chandapura</option>
+                    <option>Kothannur</option>
+                    <option>sapthagiri Layout</option>
+                    <option>Brookefield</option>
+                    <option>Seegehalli</option>
+                    <option>Rajaji Nagar</option>
+                    <option>Whitefield</option>
+                    <option>Nagasandra</option>
+                    <option>Hoodi</option>
+                    <option>Kathriguppe</option>
+                    <option>Yeshwanthpur</option>
+                    <option>Thanisandra</option>
+                </select>
+            </div>
+            <button type="submit" class="submit">Estimate Price</button>
+        </form>
+        <div id="uiEstimatedPrice" class="result">
+            <h2>Estimated Price: </h2>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        // Handle form submission and call the Flask backend for price prediction
+        $(document).ready(function () {
+            $("#predictForm").submit(function (e) {
+                e.preventDefault();  // Prevent form submission
+                var sqft = $("#uiSqft").val();
+                var bhk = $("input[name='bhk']:checked").val();
+                var bath = $("input[name='bath']:checked").val();
+                var location = $("#uiLocations").val();
+
+                $.ajax({
+                    url: '/predict',
+                    type: 'POST',
+                    data: {
+                        sqft: sqft,
+                        bhk: bhk,
+                        bath: bath,
+                        location: location
+                    },
+                    success: function (data) {
+                        $("#uiEstimatedPrice h2").text("Estimated Price: " + data.price + " Lakh");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
